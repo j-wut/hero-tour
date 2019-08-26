@@ -38,7 +38,7 @@ export class HeroesComponent implements OnInit {
     this.newHero.setValue({ id: this.newHero.value.id + 1, name: "" });
   }
 
-  deleteHero(index) {
+  delete(index) {
     console.log("deleting: ", this.heroes[index]);
     this.heroService.deleteHero(index);
   }

@@ -8,7 +8,7 @@
 <ul class="heroes">
   <li *ngFor="let hero of heroes; index as index">
     <span class="badge">{{ hero.id }}</span> {{ hero.name }}
-    <button class="delete" title="delete hero" (click)="deleteHero(index)">
+    <button class="delete" title="delete hero" (click)="delete(index)">
       x
     </button>
   </li>
