@@ -1,0 +1,15 @@
+<h2>Hero List</h2>
+<form [formGroup]="newHero" (ngSubmit)="onSubmit(newHero.value)">
+  <input id="name" type="text" formControlName="name" />
+  <button class="button" type="submit">
+    Add
+  </button>
+</form>
+<ul class="heroes">
+  <li *ngFor="let hero of heroes; index as index">
+    <span class="badge">{{ hero.id }}</span> {{ hero.name }}
+    <button class="delete" title="delete hero" (click)="deleteHero(index)">
+      x
+    </button>
+  </li>
+</ul>
