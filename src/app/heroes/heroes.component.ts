@@ -34,7 +34,7 @@ export class HeroesComponent implements OnInit {
 
   onSubmit(formData) {
     console.log("adding: ", formData);
-    this.heroes.push(formData);
+    this.heroService.addHero(formData);
     this.newHero.setValue({ id: this.newHero.value.id + 1, name: "" });
   }
 
