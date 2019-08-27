@@ -9,6 +9,9 @@ export class HeroService {
   constructor() {
     this.heroes = HEROES;
   }
+  getHero(id) {
+    return this.heroes.filter(hero => hero.id == id)[0];
+  }
   getHeroes() {
     return this.heroes;
   }

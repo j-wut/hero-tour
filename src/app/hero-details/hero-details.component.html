@@ -1,1 +1,10 @@
-<p>hero-details works!</p>
+<h2>"{{ hero.name | uppercase }}" Details</h2>
+<form [formGroup]="editForm" (ngSubmit)="save(editForm.value)">
+  <label> ID: {{ hero.id }}</label> <br />
+  <label>Name: <input id="name" type="text" formControlName="name"/></label>
+  <br />
+  <button (click)="goBack()">Cancel</button><button type="submit">Save</button>
+</form>
+<p>
+  <span>{{ hero.id }}</span> {{ hero.name }}
+</p>
