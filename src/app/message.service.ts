@@ -7,6 +7,9 @@ export class MessageService {
   messages = [];
 
   constructor() {}
+  error(service, ...msgs) {
+    this.info(service, ": ", msgs.join(""));
+  }
   info(...msgs) {
     this.newMsg(msgs.join(""));
   }

@@ -2,38 +2,51 @@ import { Injectable } from "@angular/core";
 import { HEROES } from "./mock-heroes";
 import { MessageService } from "./message.service";
 import { Observable, of } from "rxjs";
+import { catchError, map, tap } from "rxjs/operators";
 import { Hero } from "./hero";
+
+import { HttpClient, HttpHeaders } from "@angular/common/http";
 
 @Injectable({
   providedIn: "root"
 })
 export class HeroService {
   heroes;
-  constructor(private log: MessageService) {
+
+  heroesUrl = "api/heroes";
+  httpOptions = {
+    headers: new HttpHeaders({ "Content-Type": "application/json" })
+  };
+
+  constructor(private http: HttpClient, private log: MessageService) {
     this.heroes = HEROES;
   }
-  genId() {
-    return Math.max.apply(null, this.heroes.map(h => h.id)) + 1;
-  }
-  getHero(id) {
-    this.log.info("Pulling hero: ", id);
-    return this.heroes.filter(hero => hero.id == id)[0];
+  getHero(id): Observable<Hero> {
+    return this.http
+      .get<Hero>("${this.heroUrl}/#{id}")
+      .pipe(tap(_ => this.log.info("Fetching Heroes")));
   }
   getHeroes(): Observable<Hero[]> {
-    this.log.info("Fetching Heroes");
-    return of(this.heroes);
+    return this.http
+      .get<Hero[]>(this.heroesUrl)
+      .pipe(tap(_ => this.log.info("Fetching Heroes")));
   }
-  addHero(hero) {
-    this.log.info("Adding Hero: ", hero.id);
-    hero.id = this.genId();
-    this.heroes.push(hero);
+  addHero(hero): Observable<Hero> {
+    return this.http
+      .post<Hero>(this.heroesUrl, hero, this.httpOptions)
+      .pipe(tap((h: Hero) => this.log.info("adding new Hero: ", h.id)));
   }
-  deleteHero(index) {
-    this.log.info("Deleting hero: ", this.heroes[index].id);
-    this.heroes.splice(index, 1);
+  deleteHero(hero: Hero | number): Observable<Hero> {
+    return this.http
+      .delete<Hero>(
+        "${this.heroUrl}/#{typeof hero === 'number' ? hero | hero.id}",
+        this.httpOptions
+      )
+      .pipe(tap((h: Hero) => this.log.info("deleting hero: ", h.id)));
   }
-  updateHero(hero, name) {
-    hero.name = name;
-    this.log.info("Hero ", hero.id, " updated to ", name);
+  updateHero(hero): Observable<Hero> {
+    return this.http
+      .put<Hero>(this.heroesUrl, hero, this.httpOptions)
+      .pipe(tap((h: Hero) => this.log.info("updating Hero: ", h.id)));
   }
 }
