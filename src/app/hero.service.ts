@@ -23,8 +23,8 @@ export class HeroService {
   }
   getHero(id): Observable<Hero> {
     return this.http
-      .get<Hero>("${this.heroUrl}/#{id}")
-      .pipe(tap(_ => this.log.info("Fetching Heroes")));
+      .get<Hero>(`${this.heroesUrl}/${id}`, this.httpOptions)
+      .pipe(tap((h: Hero) => this.log.info("Fetching Hero: ", h.id)));
   }
   getHeroes(): Observable<Hero[]> {
     return this.http
@@ -37,16 +37,16 @@ export class HeroService {
       .pipe(tap((h: Hero) => this.log.info("adding new Hero: ", h.id)));
   }
   deleteHero(hero: Hero | number): Observable<Hero> {
+    const id = typeof hero === "number" ? hero : hero.id;
+    console.log("delete: ", id);
     return this.http
-      .delete<Hero>(
-        "${this.heroUrl}/#{typeof hero === 'number' ? hero | hero.id}",
-        this.httpOptions
-      )
-      .pipe(tap((h: Hero) => this.log.info("deleting hero: ", h.id)));
+      .delete<Hero>(`${this.heroesUrl}/${id}`, this.httpOptions)
+      .pipe(tap(_ => this.log.info("deleting hero: ", id)));
   }
-  updateHero(hero): Observable<Hero> {
-    return this.http
+  updateHero(hero) {
+    this.http
       .put<Hero>(this.heroesUrl, hero, this.httpOptions)
-      .pipe(tap((h: Hero) => this.log.info("updating Hero: ", h.id)));
+      .pipe(tap(_ => this.log.info("updating Hero: ", hero.id)))
+      .subscribe();
   }
 }

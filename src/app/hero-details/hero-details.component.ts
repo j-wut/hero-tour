@@ -4,6 +4,7 @@ import { FormBuilder } from "@angular/forms";
 import { Location } from "@angular/common";
 
 import { HeroService } from "../hero.service";
+import { Hero } from "../hero";
 
 @Component({
   selector: "app-hero-details",
@@ -21,17 +22,19 @@ export class HeroDetailsComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.hero = this.heroService.getHero(
-      this.route.snapshot.paramMap.get("id")
-    );
-    this.editForm = this.formBuilder.group({ name: this.hero.name });
+    this.heroService
+      .getHero(this.route.snapshot.paramMap.get("id"))
+      .subscribe((h: Hero) => {
+        this.hero = h;
+        this.editForm = this.formBuilder.group(h);
+      });
   }
   goBack() {
     this.location.back();
     return false;
   }
   save(form) {
-    this.heroService.updateHero(this.hero, form.name);
+    this.heroService.updateHero(form);
     this.location.back();
   }
 }

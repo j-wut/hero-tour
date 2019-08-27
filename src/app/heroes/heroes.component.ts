@@ -2,6 +2,7 @@ import { Component, OnInit } from "@angular/core";
 import { FormBuilder } from "@angular/forms";
 
 import { HeroService } from "../hero.service";
+import { Hero } from "../hero";
 
 @Component({
   selector: "app-heroes",
@@ -25,13 +26,16 @@ export class HeroesComponent implements OnInit {
   }
 
   onSubmit(formData) {
-    console.log("adding: ", formData);
-    this.heroService.addHero(formData);
-    this.newHero.setValue({ name: "" });
+    this.heroService.addHero(formData).subscribe((h: Hero) => {
+      this.heroes.push(h);
+      this.newHero.setValue({ name: "" });
+    });
   }
 
   delete(index) {
-    console.log("deleting: ", this.heroes[index]);
-    this.heroService.deleteHero(index);
+    console.log(index);
+    this.heroService.deleteHero(this.heroes[index]).subscribe((h: Hero) => {
+      this.heroes.splice(index, 1);
+    });
   }
 }

@@ -60,7 +60,7 @@ button.delete {
   color: white;
   float: right;
   border-radius: 0 4px 4px 0;
-
+  top: -100%;
   font-size: medium;
   line-height: 1em;
   height: 100%;
