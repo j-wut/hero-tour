@@ -9,33 +9,25 @@ import { HeroService } from "../hero.service";
   styleUrls: ["./heroes.component.css"]
 })
 export class HeroesComponent implements OnInit {
+  heroes;
   newHero;
   constructor(
     private heroService: HeroService,
     private formBuilder: FormBuilder
   ) {
     this.newHero = this.formBuilder.group({
-      id:
-        Math.max.apply(
-          null,
-          this.heroService.getHeroes().map(h => {
-            return h.id;
-          })
-        ) + 1,
       name: ""
     });
   }
 
-  get heroes() {
-    return this.heroService.getHeroes();
+  ngOnInit() {
+    this.heroService.getHeroes().subscribe(heroes => (this.heroes = heroes));
   }
-
-  ngOnInit() {}
 
   onSubmit(formData) {
     console.log("adding: ", formData);
     this.heroService.addHero(formData);
-    this.newHero.setValue({ id: this.newHero.value.id + 1, name: "" });
+    this.newHero.setValue({ name: "" });
   }
 
   delete(index) {

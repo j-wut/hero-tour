@@ -1,6 +1,8 @@
 import { Injectable } from "@angular/core";
 import { HEROES } from "./mock-heroes";
 import { MessageService } from "./message.service";
+import { Observable, of } from "rxjs";
+import { Hero } from "./hero";
 
 @Injectable({
   providedIn: "root"
@@ -10,15 +12,20 @@ export class HeroService {
   constructor(private log: MessageService) {
     this.heroes = HEROES;
   }
+  genId() {
+    return Math.max.apply(null, this.heroes.map(h => h.id)) + 1;
+  }
   getHero(id) {
     this.log.info("Pulling hero: ", id);
     return this.heroes.filter(hero => hero.id == id)[0];
   }
-  getHeroes() {
-    return this.heroes;
+  getHeroes(): Observable<Hero[]> {
+    this.log.info("Fetching Heroes");
+    return of(this.heroes);
   }
   addHero(hero) {
     this.log.info("Adding Hero: ", hero.id);
+    hero.id = this.genId();
     this.heroes.push(hero);
   }
   deleteHero(index) {
